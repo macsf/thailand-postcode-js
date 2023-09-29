@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>province / district / subdistrict</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    select {
+      min-width: 200px;
+    }
+
+    #output {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="columns mt-4">
+      <div class="column is-offset-one-quarter-desktop is-half-desktop is-offset-one-fifth-mobile is-three-fifths-mobile">
+        <form action="">
+
+          <div class="field">
+            <label class="label" for="province">จังหวัด</label>
+            <div class="control">
+              <div class="select">
+                <select name="province" id="province">
+                  <option></option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="district">เขต/อำเภอ</label>
+            <div class="control">
+              <div class="select">
+                <select name="district" id="district">
+                  <option></option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="subdistrict">แขวง/ตำบล</label>
+            <div class="control">
+              <div class="select">
+                <select name="subdistrict" id="subdistrict">
+                  <option></option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <div class="columns mt-4">
+      <div class="column is-offset-one-quarter-desktop is-half-desktop is-offset-one-fifth-mobile is-three-fifths-mobile">
+        <div id="output" class="notification is-info"></div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <script type="module" src="./script_v2.js"></script>
+</body>
+
+</html>
