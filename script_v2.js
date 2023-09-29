@@ -3,15 +3,15 @@ import { districts } from "./json/districts.js";
 import { subdistricts } from "./json/subdistricts.js";
 import { zipcodes } from "./json/zipcodes.js";
 
-function createOption(item, idKey, valueKey) {
+const createOption = (item, idKey, valueKey) => {
   const option = document.createElement("option");
   option.id = item[idKey].trim();
   option.value = item[valueKey].trim();
   option.textContent = item[valueKey].trim();
   return option;
-}
+};
 
-function sortProvinces(items) {
+const sortProvinces = (items) => {
   const [first, ...rest] = items;
   return [
     first,
@@ -19,9 +19,9 @@ function sortProvinces(items) {
       a.province_name.localeCompare(b.province_name, "th")
     ),
   ];
-}
+};
 
-function sortAlphabetically(a, b, key) {
+const sortAlphabetically = (a, b, key) => {
   const nameA = a[key];
   const nameB = b[key];
 
@@ -32,9 +32,9 @@ function sortAlphabetically(a, b, key) {
   if (!starA && starB) return -1;
 
   return nameA.localeCompare(nameB, "th");
-}
+};
 
-function loadOptions(items, dropdownId, idKey, valueKey, sortFn) {
+const loadOptions = (items, dropdownId, idKey, valueKey, sortFn) => {
   const dropdown = document.getElementById(dropdownId);
   const fragment = document.createDocumentFragment();
 
@@ -45,16 +45,16 @@ function loadOptions(items, dropdownId, idKey, valueKey, sortFn) {
   }
 
   dropdown.appendChild(fragment);
-}
+};
 
-function optionPlaceholder() {
+const optionPlaceholder = () => {
   const placeholderOption = document.createElement("option");
   placeholderOption.value = "";
   placeholderOption.textContent = "";
   return placeholderOption;
-}
+};
 
-function updateOutput(values) {
+const updateOutput = (values) => {
   const output = document.getElementById("output");
 
   if (!values) {
@@ -63,28 +63,21 @@ function updateOutput(values) {
     output.style.display = "block";
     output.textContent = values;
   }
-}
+};
 
-function matchZipcodesToSubdistricts() {
-  const matchedData = subdistricts.map((subdistrict) => {
+const matchZipcodesToSubdistricts = () => {
+  return subdistricts.map((subdistrict) => {
     const zipcodeEntry = zipcodes.find(
       (zipcode) => zipcode.subdistrict_code === subdistrict.subdistrict_code
     );
 
-    if (zipcodeEntry) {
-      return {
-        ...subdistrict,
-        zipcode_name: zipcodeEntry.zipcode_name,
-      };
-    }
-
-    return subdistrict;
+    return zipcodeEntry
+      ? { ...subdistrict, zipcode_name: zipcodeEntry.zipcode_name }
+      : subdistrict;
   });
+};
 
-  return matchedData;
-}
-
-function loadSubdistricts(subdistricts, district_id) {
+const loadSubdistricts = (subdistricts, district_id) => {
   const filtered_subdistrict = subdistricts.filter(
     (item) => item.district_id === district_id
   );
@@ -95,9 +88,9 @@ function loadSubdistricts(subdistricts, district_id) {
     "subdistrict_id",
     "subdistrict_name"
   );
-}
+};
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   loadOptions(
     provinces,
     "province",
@@ -110,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const optDistrict = document.getElementById("district");
   const optSubdistrict = document.getElementById("subdistrict");
 
-  function getSelectedValues() {
+  const getSelectedValues = () => {
     const province =
       optProvince.options[optProvince.selectedIndex]?.textContent || "";
     const district =
@@ -149,9 +142,9 @@ document.addEventListener("DOMContentLoaded", function () {
     return [subdistrictStr, districtStr, provinceStr, zipcodeStr]
       .filter((val) => val)
       .join(" ");
-  }
+  };
 
-  optProvince.addEventListener("change", function () {
+  optProvince.addEventListener("change", () => {
     const province_id = optProvince.options[optProvince.selectedIndex].id;
 
     optDistrict.options.length = 0;
@@ -174,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateOutput(getSelectedValues());
   });
 
-  optDistrict.addEventListener("change", function () {
+  optDistrict.addEventListener("change", () => {
     const district_id = optDistrict.options[optDistrict.selectedIndex].id;
 
     optSubdistrict.options.length = 0;
@@ -195,7 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
     updateOutput(getSelectedValues());
   });
 
-  optSubdistrict.addEventListener("change", function () {
+  optSubdistrict.addEventListener("change", () => {
     updateOutput(getSelectedValues());
   });
 });
