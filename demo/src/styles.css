@@ -120,19 +120,23 @@ code {
 }
 
 .demo-preview {
-  flex: 0 1 420px;
-  width: min(420px, 100%);
+  flex: 0 0 420px;
+  width: 420px;
+  max-width: 100%;
+  min-width: 0;
   display: grid;
   gap: 16px;
 }
 
 .demo-info {
   flex: 1;
-  min-width: 280px;
+  min-width: 0;
 }
 
 .demo-output-block {
   margin: 0;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .demo-card {
@@ -173,6 +177,9 @@ code {
 }
 
 .demo-json {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   background: #f3f4f6;
   border-radius: 8px;
@@ -184,6 +191,8 @@ code {
   overflow: auto;
   max-height: 420px;
   white-space: pre;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
 /* Code block */
@@ -388,7 +397,7 @@ code {
   }
 
   .demo-preview {
-    flex-basis: 100%;
+    flex: 1 1 100%;
     width: 100%;
   }
 }
