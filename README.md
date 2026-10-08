@@ -125,7 +125,7 @@ The demo mirrors the date-picker layout: sidebar sections for cascade selects, a
 
 ## Keeping geography data current
 
-The git SHA in `package.json` is pinned on purpose. A weekly workflow compares it to upstream `main` and opens an issue when newer data exists.
+The git SHA in `package.json` is pinned on purpose. A monthly workflow compares it to upstream `main` and opens an issue when newer data exists.
 
 ```bash
 pnpm check-upstream   # fail if upstream main is ahead

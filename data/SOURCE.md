@@ -15,4 +15,4 @@ pnpm check-upstream   # compare pinned SHA to upstream main
 pnpm update-data      # bump dependency, test, and build
 ```
 
-A weekly GitHub Action (`.github/workflows/check-upstream.yml`) runs the same check and opens an issue when upstream advances.
+A monthly GitHub Action (`.github/workflows/check-upstream.yml`) runs the same check and opens an issue when upstream advances.

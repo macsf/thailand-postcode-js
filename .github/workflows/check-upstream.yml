@@ -2,8 +2,8 @@ name: Check Upstream Geography Data
 
 on:
   schedule:
-    # Mondays 02:00 UTC
-    - cron: "0 2 * * 1"
+    # 1st of each month, 02:00 UTC
+    - cron: "0 2 1 * *"
   workflow_dispatch:
 
 permissions:
