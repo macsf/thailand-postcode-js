@@ -86,6 +86,8 @@ pnpm install
 pnpm demo
 ```
 
+The Vite demo has four modes: cascade selects, full-address search via `useAddressSearch`, per-field autosuggest, and postal-code lookup via `getByZipcode`.
+
 ## Keeping geography data current
 
 The git SHA in `package.json` is pinned on purpose. A weekly workflow compares it to upstream `main` and opens an issue when newer data exists.

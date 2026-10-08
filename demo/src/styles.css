@@ -45,6 +45,40 @@ body {
   font-size: 0.95rem;
 }
 
+.mode-switch {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.3rem;
+  padding: 0.3rem;
+  background: color-mix(in srgb, var(--surface) 70%, var(--border));
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.mode-btn {
+  min-height: 40px;
+  padding: 0 0.35rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mode-btn.is-selected {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 1px 4px rgb(20 32 26 / 8%);
+}
+
+.mode-btn:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, white);
+  outline-offset: 2px;
+}
+
 .cascade {
   display: grid;
   gap: 1rem;
@@ -82,6 +116,134 @@ body {
 .select:disabled {
   opacity: 0.55;
   cursor: not-allowed;
+}
+
+.field-cascade {
+  overflow: visible;
+}
+
+.field-suggest {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.field-suggest[data-disabled] {
+  opacity: 0.55;
+}
+
+.field-suggest-list {
+  top: calc(100% + 0.25rem);
+  left: 0;
+  right: 0;
+}
+
+.suggest {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  padding: 1.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgb(20 32 26 / 6%);
+}
+
+.suggest label,
+.field-suggest label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.suggest-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+
+.suggest-input:focus {
+  outline: 2px solid color-mix(in srgb, var(--accent) 45%, white);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.suggest-list {
+  position: absolute;
+  z-index: 10;
+  top: calc(100% - 0.35rem);
+  left: 1.25rem;
+  right: 1.25rem;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  max-height: 280px;
+  overflow: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgb(20 32 26 / 12%);
+}
+
+.suggest-option {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.suggest-option.is-active,
+.suggest-option:hover {
+  background: color-mix(in srgb, var(--accent) 10%, white);
+}
+
+.suggest-option-main {
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+.suggest-option-meta {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.suggest-empty {
+  padding: 0.75rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.result-list {
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  display: grid;
+  gap: 0.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 10px 30px rgb(20 32 26 / 6%);
+  max-height: 360px;
+  overflow: auto;
+}
+
+.result-item {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 8px;
 }
 
 .output {
