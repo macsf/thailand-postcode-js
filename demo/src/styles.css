@@ -8,7 +8,7 @@
 
 body {
   margin: 0;
-  font-family: "Inter", "Sarabun", "Noto Sans Thai", system-ui, -apple-system,
+  font-family: "Google Sans", "Noto Sans Thai", system-ui, -apple-system,
     sans-serif;
   background: #f8f9fa;
   color: #111827;
@@ -122,11 +122,17 @@ code {
 .demo-preview {
   flex: 0 1 420px;
   width: min(420px, 100%);
+  display: grid;
+  gap: 16px;
 }
 
 .demo-info {
   flex: 1;
-  min-width: 240px;
+  min-width: 280px;
+}
+
+.demo-output-block {
+  margin: 0;
 }
 
 .demo-card {
@@ -167,7 +173,7 @@ code {
 }
 
 .demo-json {
-  margin: 0 0 16px;
+  margin: 0;
   background: #f3f4f6;
   border-radius: 8px;
   padding: 12px 14px;

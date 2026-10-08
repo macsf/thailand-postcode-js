@@ -85,10 +85,24 @@ export function AddressForm() {
   const [result, setResult] = useState<AddressCascadeChange | null>(null);
 
   return (
-    <AddressCascade
-      includeFormatted
-      onChange={setResult}
-    />
+    <>
+      <AddressCascade includeFormatted onChange={setResult} />
+
+      {result ? (
+        <pre>{JSON.stringify(result, null, 2)}</pre>
+      ) : null}
+
+      {/*
+        result = {
+          province: { th, en },
+          district: { th, en },
+          subdistrict: { th, en },
+          postalCode,
+          formatted: { th, en }   // when includeFormatted
+          // value, selection      // when detail
+        }
+      */}
+    </>
   );
 }
 ```

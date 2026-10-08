@@ -71,6 +71,12 @@ describe("search", () => {
       true
     );
   });
+
+  it("autosuggests postal codes from a short digit prefix", () => {
+    const rows = search("10");
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((r) => String(r.postalCode).startsWith("10"))).toBe(true);
+  });
 });
 
 describe("formatAddress", () => {

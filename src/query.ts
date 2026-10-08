@@ -91,7 +91,7 @@ export function search(query: string, limit = 50): AddressResult[] {
     results.push(result);
   };
 
-  if (/^\d{3,5}$/.test(needle)) {
+  if (/^\d{1,5}$/.test(needle)) {
     for (const [postal, rows] of addressesByPostalCode) {
       if (!String(postal).startsWith(needle)) continue;
       for (const row of rows) {

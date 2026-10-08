@@ -196,16 +196,50 @@ export function AutosuggestDemo() {
               </ul>
             ) : null}
           </div>
-        </div>
-        <div className="demo-info">
-          <div className="demo-value-label">selected</div>
-          <pre className="demo-json" aria-live="polite">
-            {payload ? JSON.stringify(payload, null, 2) : "null"}
-          </pre>
-          <CodeBlock
-            code={`import { useAddressSearch } from "thailand-postcode/react";
 
-const results = useAddressSearch(query, 12);`}
+          <div className="demo-output-block">
+            <div className="demo-value-label">selected</div>
+            <pre className="demo-json" aria-live="polite">
+              {payload ? JSON.stringify(payload, null, 2) : "null"}
+            </pre>
+          </div>
+        </div>
+
+        <div className="demo-info">
+          <CodeBlock
+            code={`import { useState } from "react";
+import { formatAddressPair } from "thailand-postcode";
+import { useAddressSearch } from "thailand-postcode/react";
+
+export function AddressSearch() {
+  const [query, setQuery] = useState("");
+  const results = useAddressSearch(query, 12);
+
+  return (
+    <>
+      <input
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="province, district, or zipcode"
+      />
+      <ul>
+        {results.map((hit) => {
+          const formatted = formatAddressPair({
+            province: hit.province,
+            district: hit.district,
+            subdistrict: hit.subdistrict,
+            postalCode: hit.postalCode,
+          });
+          return (
+            <li key={hit.subdistrict.subdistrictCode}>
+              {formatted.th}
+            </li>
+          );
+        })}
+      </ul>
+    </>
+  );
+}`}
           />
         </div>
       </div>

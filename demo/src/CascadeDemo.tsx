@@ -53,18 +53,37 @@ export function CascadeDemo() {
               onChange={setResult}
             />
           </div>
+
+          <div className="demo-output-block">
+            <div className="demo-value-label">onChange payload</div>
+            <pre className="demo-json" aria-live="polite">
+              {result ? JSON.stringify(result, null, 2) : "null"}
+            </pre>
+          </div>
         </div>
+
         <div className="demo-info">
-          <div className="demo-value-label">onChange payload</div>
-          <pre className="demo-json" aria-live="polite">
-            {result ? JSON.stringify(result, null, 2) : "null"}
-          </pre>
           <CodeBlock
-            code={`<AddressCascade
-  includeFormatted={${includeFormatted}}
-  detail={${detail}}
-  onChange={setResult}
-/>`}
+            code={`import { useState } from "react";
+import {
+  AddressCascade,
+  type AddressCascadeChange,
+} from "thailand-postcode/react";
+
+export function AddressForm() {
+  const [result, setResult] = useState<AddressCascadeChange | null>(null);
+
+  return (
+    <>
+      <AddressCascade
+        includeFormatted={${includeFormatted}}
+        detail={${detail}}
+        onChange={setResult}
+      />
+      <pre>{JSON.stringify(result, null, 2)}</pre>
+    </>
+  );
+}`}
           />
         </div>
       </div>
