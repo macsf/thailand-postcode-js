@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useId, useMemo, useState } from "react";
-import { formatAddress } from "../format.js";
+import { formatAddressPair } from "../format.js";
 import {
   getDistrictByCode,
   getProvinceByCode,
@@ -10,6 +10,7 @@ import {
 import type {
   AddressSelection,
   District,
+  LocalizedName,
   Province,
   Subdistrict,
 } from "../types.js";
@@ -21,16 +22,28 @@ export interface AddressCascadeValue {
   subdistrictCode: string;
 }
 
+/**
+ * Default form payload: names (th/en) + postal.
+ * Set `includeFormatted` for `formatted`, or `detail` for codes/`selection`.
+ */
 export interface AddressCascadeChange {
-  value: AddressCascadeValue;
-  selection: AddressSelection;
-  formatted: string;
+  province: LocalizedName | null;
+  district: LocalizedName | null;
+  subdistrict: LocalizedName | null;
+  postalCode: number | null;
+  formatted?: LocalizedName;
+  value?: AddressCascadeValue;
+  selection?: AddressSelection;
 }
 
 export interface AddressCascadeProps {
   value?: Partial<AddressCascadeValue>;
   defaultValue?: Partial<AddressCascadeValue>;
   onChange?: (change: AddressCascadeChange) => void;
+  /** Include `formatted: { th, en }` on the payload. */
+  includeFormatted?: boolean;
+  /** Include `value` (codes) and full `selection` on the payload. */
+  detail?: boolean;
   labels?: {
     province?: string;
     district?: string;
@@ -89,8 +102,20 @@ function buildSelection(
   };
 }
 
+function toLocalized(
+  th: string | undefined,
+  en: string | undefined
+): LocalizedName | null {
+  if (!th && !en) return null;
+  return { th: th ?? "", en: en ?? "" };
+}
+
 function emitChange(
   next: AddressCascadeValue,
+  options: {
+    includeFormatted: boolean;
+    detail: boolean;
+  },
   onChange?: (change: AddressCascadeChange) => void
 ) {
   const selection = buildSelection(
@@ -98,17 +123,52 @@ function emitChange(
     next.districtCode,
     next.subdistrictCode
   );
-  onChange?.({
-    value: next,
-    selection,
-    formatted: formatAddress(selection),
-  });
+
+  const change: AddressCascadeChange = {
+    province: toLocalized(
+      selection.province?.provinceNameTh,
+      selection.province?.provinceNameEn
+    ),
+    district: toLocalized(
+      selection.district?.districtNameTh,
+      selection.district?.districtNameEn
+    ),
+    subdistrict: toLocalized(
+      selection.subdistrict?.subdistrictNameTh,
+      selection.subdistrict?.subdistrictNameEn
+    ),
+    postalCode: (() => {
+      if (typeof selection.postalCode === "number") {
+        return Number.isFinite(selection.postalCode)
+          ? selection.postalCode
+          : null;
+      }
+      if (selection.postalCode == null || selection.postalCode === "") {
+        return null;
+      }
+      const parsed = Number(selection.postalCode);
+      return Number.isFinite(parsed) ? parsed : null;
+    })(),
+  };
+
+  if (options.includeFormatted) {
+    change.formatted = formatAddressPair(selection);
+  }
+
+  if (options.detail) {
+    change.value = next;
+    change.selection = selection;
+  }
+
+  onChange?.(change);
 }
 
 export function AddressCascade({
   value,
   defaultValue,
   onChange,
+  includeFormatted = false,
+  detail = false,
   labels,
   placeholders,
   className,
@@ -141,9 +201,9 @@ export function AddressCascade({
       if (!isControlled) {
         setInternal(next);
       }
-      emitChange(next, onChange);
+      emitChange(next, { includeFormatted, detail }, onChange);
     },
-    [current, isControlled, onChange]
+    [current, detail, includeFormatted, isControlled, onChange]
   );
 
   const handleProvince = useCallback(

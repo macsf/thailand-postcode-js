@@ -3,45 +3,67 @@ import {
   AddressCascade,
   type AddressCascadeChange,
 } from "thailand-postcode/react";
-import { CodeBlock, JsonDisplay, ValueDisplay } from "./CodeBlock";
+import { CodeBlock } from "./CodeBlock";
 
 export function CascadeDemo() {
   const [result, setResult] = useState<AddressCascadeChange | null>(null);
+  const [includeFormatted, setIncludeFormatted] = useState(true);
+  const [detail, setDetail] = useState(false);
 
   return (
     <div>
       <h1 className="demo-section-title">Cascade selects</h1>
       <p className="demo-section-desc">
-        <code>onChange</code> receives{" "}
-        <code>{"{ value, selection, formatted }"}</code>. Codes are strings for
-        form fields; <code>selection</code> holds the resolved names and
-        postal code.
+        Default payload is names (th/en) plus postal. Toggle{" "}
+        <code>includeFormatted</code> or <code>detail</code> for extras.
       </p>
       <div className="demo-row">
         <div className="demo-preview">
           <div className="demo-card">
+            <div className="demo-flags">
+              <label className="demo-flag">
+                <input
+                  type="checkbox"
+                  checked={includeFormatted}
+                  onChange={(event) => {
+                    setIncludeFormatted(event.target.checked);
+                    setResult(null);
+                  }}
+                />
+                includeFormatted
+              </label>
+              <label className="demo-flag">
+                <input
+                  type="checkbox"
+                  checked={detail}
+                  onChange={(event) => {
+                    setDetail(event.target.checked);
+                    setResult(null);
+                  }}
+                />
+                detail
+              </label>
+            </div>
             <AddressCascade
+              key={`${includeFormatted}-${detail}`}
               className="cascade"
               selectClassName="select"
+              includeFormatted={includeFormatted}
+              detail={detail}
               onChange={setResult}
             />
           </div>
         </div>
         <div className="demo-info">
-          <ValueDisplay
-            label="formatted"
-            value={result?.formatted ?? ""}
-          />
-          <JsonDisplay label="onChange payload" value={result} />
+          <div className="demo-value-label">onChange payload</div>
+          <pre className="demo-json" aria-live="polite">
+            {result ? JSON.stringify(result, null, 2) : "null"}
+          </pre>
           <CodeBlock
-            code={`import { AddressCascade } from "thailand-postcode/react";
-
-<AddressCascade
-  onChange={(change) => {
-    // change.value.provinceCode
-    // change.selection.postalCode
-    // change.formatted
-  }}
+            code={`<AddressCascade
+  includeFormatted={${includeFormatted}}
+  detail={${detail}}
+  onChange={setResult}
 />`}
           />
         </div>

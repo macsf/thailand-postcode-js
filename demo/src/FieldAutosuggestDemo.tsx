@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
-import { formatAddress } from "thailand-postcode";
+import { formatAddressPair } from "thailand-postcode";
 import {
   useDistricts,
   useProvinces,
   useSubdistricts,
 } from "thailand-postcode/react";
-import { CodeBlock, JsonDisplay, ValueDisplay } from "./CodeBlock";
+import { CodeBlock } from "./CodeBlock";
 import {
   FieldSuggest,
   type FieldSuggestOption,
@@ -62,43 +62,58 @@ export function FieldAutosuggestDemo() {
     [subdistrict, subdistricts]
   );
 
-  const selection =
-    province || district || selectedSubdistrict
-      ? {
-          province: province
-            ? {
-                provinceCode: Number(province.id),
-                provinceNameTh: province.label,
-                provinceNameEn: province.meta ?? "",
-              }
-            : null,
-          district: district
-            ? {
-                districtCode: Number(district.id),
-                districtNameTh: district.label,
-                districtNameEn: district.meta ?? "",
-              }
-            : null,
-          subdistrict: selectedSubdistrict
-            ? {
-                subdistrictCode: selectedSubdistrict.subdistrictCode,
-                subdistrictNameTh: selectedSubdistrict.subdistrictNameTh,
-                subdistrictNameEn: selectedSubdistrict.subdistrictNameEn,
-                postalCode: selectedSubdistrict.postalCode,
-              }
-            : null,
-          postalCode: selectedSubdistrict?.postalCode ?? null,
-        }
-      : null;
+  const payload = useMemo(() => {
+    if (!province && !district && !selectedSubdistrict) return null;
 
-  const formatted = selection ? formatAddress(selection) : "";
+    const selection = {
+      province: province
+        ? {
+            provinceCode: Number(province.id),
+            provinceNameTh: province.label,
+            provinceNameEn: province.meta ?? "",
+          }
+        : null,
+      district: district
+        ? {
+            districtCode: Number(district.id),
+            districtNameTh: district.label,
+            districtNameEn: district.meta ?? "",
+          }
+        : null,
+      subdistrict: selectedSubdistrict
+        ? {
+            subdistrictCode: selectedSubdistrict.subdistrictCode,
+            subdistrictNameTh: selectedSubdistrict.subdistrictNameTh,
+            subdistrictNameEn: selectedSubdistrict.subdistrictNameEn,
+            postalCode: selectedSubdistrict.postalCode,
+          }
+        : null,
+      postalCode: selectedSubdistrict?.postalCode ?? null,
+    };
+
+    return {
+      province: province
+        ? { th: province.label, en: province.meta ?? "" }
+        : null,
+      district: district
+        ? { th: district.label, en: district.meta ?? "" }
+        : null,
+      subdistrict: selectedSubdistrict
+        ? {
+            th: selectedSubdistrict.subdistrictNameTh,
+            en: selectedSubdistrict.subdistrictNameEn,
+          }
+        : null,
+      postalCode: selectedSubdistrict?.postalCode ?? null,
+      formatted: formatAddressPair(selection),
+    };
+  }, [province, district, selectedSubdistrict]);
 
   return (
     <div>
       <h1 className="demo-section-title">Per-field autosuggest</h1>
       <p className="demo-section-desc">
-        Build the same <code>AddressSelection</code> shape from the hooks, then
-        pass it to <code>formatAddress</code>.
+        Same simplified payload shape as the cascade form.
       </p>
       <div className="demo-row">
         <div className="demo-preview">
@@ -146,21 +161,16 @@ export function FieldAutosuggestDemo() {
           </div>
         </div>
         <div className="demo-info">
-          <ValueDisplay label="formatted" value={formatted} />
-          <JsonDisplay label="AddressSelection" value={selection} />
+          <div className="demo-value-label">payload</div>
+          <pre className="demo-json" aria-live="polite">
+            {payload ? JSON.stringify(payload, null, 2) : "null"}
+          </pre>
           <CodeBlock
-            code={`import { formatAddress } from "thailand-postcode";
-import {
+            code={`import {
   useProvinces,
   useDistricts,
   useSubdistricts,
-} from "thailand-postcode/react";
-
-const provinces = useProvinces();
-const districts = useDistricts(provinceCode);
-const subdistricts = useSubdistricts(districtCode);
-
-formatAddress(selection);`}
+} from "thailand-postcode/react";`}
           />
         </div>
       </div>

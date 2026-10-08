@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   formatAddress,
+  formatAddressEn,
+  formatAddressPair,
   getByZipcode,
   getDistrictsByProvince,
   getProvinces,
@@ -120,5 +122,34 @@ describe("formatAddress", () => {
     expect(formatted).toBe(
       "ตำบลศรีภูมิ อำเภอเมืองเชียงใหม่ จังหวัดเชียงใหม่ 50200"
     );
+  });
+
+  it("formats English names and a th/en pair", () => {
+    const selection = {
+      province: {
+        provinceCode: 10,
+        provinceNameTh: "กรุงเทพมหานคร",
+        provinceNameEn: "Bangkok",
+      },
+      district: {
+        districtCode: 1001,
+        districtNameTh: "พระนคร",
+        districtNameEn: "Phra Nakhon",
+      },
+      subdistrict: {
+        subdistrictCode: 100101,
+        subdistrictNameTh: "พระบรมมหาราชวัง",
+        subdistrictNameEn: "Phra Borom Maha Ratchawang",
+        postalCode: 10200,
+      },
+    };
+
+    expect(formatAddressEn(selection)).toBe(
+      "Phra Borom Maha Ratchawang, Phra Nakhon, Bangkok, 10200"
+    );
+    expect(formatAddressPair(selection)).toEqual({
+      th: "แขวงพระบรมมหาราชวัง เขตพระนคร จังหวัดกรุงเทพมหานคร 10200",
+      en: "Phra Borom Maha Ratchawang, Phra Nakhon, Bangkok, 10200",
+    });
   });
 });

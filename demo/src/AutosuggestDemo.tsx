@@ -5,9 +5,13 @@ import {
   useState,
   type KeyboardEvent,
 } from "react";
-import { formatAddress, type AddressResult } from "thailand-postcode";
+import {
+  formatAddress,
+  formatAddressPair,
+  type AddressResult,
+} from "thailand-postcode";
 import { useAddressSearch } from "thailand-postcode/react";
-import { CodeBlock, JsonDisplay, ValueDisplay } from "./CodeBlock";
+import { CodeBlock } from "./CodeBlock";
 
 function resultLabel(hit: AddressResult): string {
   return formatAddress({
@@ -16,6 +20,30 @@ function resultLabel(hit: AddressResult): string {
     subdistrict: hit.subdistrict,
     postalCode: hit.postalCode,
   });
+}
+
+function toPayload(hit: AddressResult) {
+  return {
+    province: {
+      th: hit.province.provinceNameTh,
+      en: hit.province.provinceNameEn,
+    },
+    district: {
+      th: hit.district.districtNameTh,
+      en: hit.district.districtNameEn,
+    },
+    subdistrict: {
+      th: hit.subdistrict.subdistrictNameTh,
+      en: hit.subdistrict.subdistrictNameEn,
+    },
+    postalCode: hit.postalCode,
+    formatted: formatAddressPair({
+      province: hit.province,
+      district: hit.district,
+      subdistrict: hit.subdistrict,
+      postalCode: hit.postalCode,
+    }),
+  };
 }
 
 export function AutosuggestDemo() {
@@ -30,6 +58,7 @@ export function AutosuggestDemo() {
 
   const results = useAddressSearch(query, 12);
   const showList = isOpen && query.trim().length > 0;
+  const payload = selected ? toPayload(selected) : null;
 
   useEffect(() => {
     setActiveIndex(-1);
@@ -89,9 +118,8 @@ export function AutosuggestDemo() {
     <div>
       <h1 className="demo-section-title">Address search</h1>
       <p className="demo-section-desc">
-        <code>useAddressSearch</code> / <code>search</code> return{" "}
-        <code>AddressResult[]</code>. Selecting a hit gives you province,
-        district, subdistrict, and postal code objects.
+        Search returns full rows; the panel shows the same simplified names +
+        postal shape.
       </p>
       <div className="demo-row">
         <div className="demo-preview">
@@ -170,19 +198,14 @@ export function AutosuggestDemo() {
           </div>
         </div>
         <div className="demo-info">
-          <ValueDisplay
-            label="formatted"
-            value={selected ? resultLabel(selected) : ""}
-          />
-          <JsonDisplay label="selected AddressResult" value={selected} />
+          <div className="demo-value-label">selected</div>
+          <pre className="demo-json" aria-live="polite">
+            {payload ? JSON.stringify(payload, null, 2) : "null"}
+          </pre>
           <CodeBlock
             code={`import { useAddressSearch } from "thailand-postcode/react";
 
-const results = useAddressSearch(query, 12);
-// results[0].province.provinceNameTh
-// results[0].district.districtCode
-// results[0].subdistrict.postalCode
-// results[0].postalCode`}
+const results = useAddressSearch(query, 12);`}
           />
         </div>
       </div>

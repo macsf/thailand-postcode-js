@@ -1,6 +1,10 @@
 import { useId, useMemo, useState } from "react";
-import { formatAddress, getByZipcode } from "thailand-postcode";
-import { CodeBlock, JsonDisplay, ValueDisplay } from "./CodeBlock";
+import {
+  formatAddress,
+  formatAddressPair,
+  getByZipcode,
+} from "thailand-postcode";
+import { CodeBlock } from "./CodeBlock";
 
 export function ZipcodeDemo() {
   const inputId = useId();
@@ -14,20 +18,29 @@ export function ZipcodeDemo() {
   const isPartial = zipcode.length > 0 && zipcode.length < 5;
   const isComplete = zipcode.length === 5;
   const hasResults = results.length > 0;
-  const summary = hasResults
-    ? `${results.length} address${results.length === 1 ? "" : "es"}`
-    : isComplete
-      ? "no matches"
-      : "";
 
-  const samplePayload = hasResults
-    ? {
-        count: results.length,
-        first: results[0],
-        ...(results.length > 1
-          ? { note: `+${results.length - 1} more rows omitted` }
-          : {}),
-      }
+  const payload = hasResults
+    ? results.map((hit) => ({
+        province: {
+          th: hit.province.provinceNameTh,
+          en: hit.province.provinceNameEn,
+        },
+        district: {
+          th: hit.district.districtNameTh,
+          en: hit.district.districtNameEn,
+        },
+        subdistrict: {
+          th: hit.subdistrict.subdistrictNameTh,
+          en: hit.subdistrict.subdistrictNameEn,
+        },
+        postalCode: hit.postalCode,
+        formatted: formatAddressPair({
+          province: hit.province,
+          district: hit.district,
+          subdistrict: hit.subdistrict,
+          postalCode: hit.postalCode,
+        }),
+      }))
     : isComplete
       ? []
       : null;
@@ -36,8 +49,7 @@ export function ZipcodeDemo() {
     <div>
       <h1 className="demo-section-title">Postal code lookup</h1>
       <p className="demo-section-desc">
-        <code>getByZipcode</code> returns <code>AddressResult[]</code> (one row
-        per matching subdistrict). Sample below shows the first row.
+        <code>getByZipcode</code> rows mapped to the same names + postal shape.
       </p>
       <div className="demo-row">
         <div className="demo-preview">
@@ -96,16 +108,14 @@ export function ZipcodeDemo() {
           </div>
         </div>
         <div className="demo-info">
-          <ValueDisplay label="Matches" value={summary} />
-          <JsonDisplay label="getByZipcode sample" value={samplePayload} />
+          <div className="demo-value-label">payload</div>
+          <pre className="demo-json" aria-live="polite">
+            {payload ? JSON.stringify(payload, null, 2) : "null"}
+          </pre>
           <CodeBlock
             code={`import { getByZipcode } from "thailand-postcode";
 
-const rows = getByZipcode("10200");
-// rows[0].province
-// rows[0].district
-// rows[0].subdistrict
-// rows[0].postalCode`}
+const rows = getByZipcode("10200");`}
           />
         </div>
       </div>

@@ -24,6 +24,11 @@ export interface Subdistrict {
   postalCode: number;
 }
 
+export interface LocalizedName {
+  th: string;
+  en: string;
+}
+
 export interface AddressSelection {
   province?: Pick<
     Province,

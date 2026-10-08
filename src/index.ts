@@ -1,4 +1,8 @@
-export { formatAddress } from "./format.js";
+export {
+  formatAddress,
+  formatAddressEn,
+  formatAddressPair,
+} from "./format.js";
 export { BANGKOK_PROVINCE_CODE } from "./indexes.js";
 export {
   getByPostalCode,
@@ -16,6 +20,7 @@ export type {
   AddressSelection,
   District,
   GetProvincesOptions,
+  LocalizedName,
   Province,
   Subdistrict,
 } from "./types.js";

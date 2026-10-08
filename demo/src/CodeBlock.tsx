@@ -83,37 +83,3 @@ export function CodeBlock({ code }: { code: string }) {
   );
 }
 
-export function ValueDisplay({
-  label = "Selected value",
-  value,
-}: {
-  label?: string;
-  value: string;
-}) {
-  return (
-    <div>
-      <div className="demo-value-label">{label}</div>
-      <div className="demo-value">{value || "null"}</div>
-    </div>
-  );
-}
-
-export function JsonDisplay({
-  label = "onChange payload",
-  value,
-}: {
-  label?: string;
-  value: unknown;
-}) {
-  const text =
-    value == null ? "null" : JSON.stringify(value, null, 2);
-
-  return (
-    <div className="demo-json-block">
-      <div className="demo-value-label">{label}</div>
-      <pre className="demo-json" aria-live="polite">
-        {text}
-      </pre>
-    </div>
-  );
-}

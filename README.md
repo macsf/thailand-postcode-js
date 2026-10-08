@@ -58,6 +58,22 @@ Field names match the upstream geography JSON.
 
 ## React
 
+`AddressCascade` `onChange` returns a simple JSON payload by default:
+
+```json
+{
+  "province": { "th": "กรุงเทพมหานคร", "en": "Bangkok" },
+  "district": { "th": "พระนคร", "en": "Phra Nakhon" },
+  "subdistrict": { "th": "พระบรมมหาราชวัง", "en": "Phra Borom Maha Ratchawang" },
+  "postalCode": 10200
+}
+```
+
+Optional flags:
+
+- `includeFormatted`: adds `formatted: { th, en }`
+- `detail`: adds `value` (codes) and full `selection`
+
 ```tsx
 import { useState } from "react";
 import {
@@ -69,13 +85,15 @@ export function AddressForm() {
   const [result, setResult] = useState<AddressCascadeChange | null>(null);
 
   return (
-    <>
-      <AddressCascade onChange={setResult} />
-      <p>{result?.formatted}</p>
-    </>
+    <AddressCascade
+      includeFormatted
+      onChange={setResult}
+    />
   );
 }
 ```
+
+Also: `formatAddress`, `formatAddressEn`, `formatAddressPair`.
 
 Hooks: `useProvinces()`, `useDistricts(provinceCode)`, `useSubdistricts(districtCode)`, `useAddressSearch(query)`.
 
