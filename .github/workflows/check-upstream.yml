@@ -1,0 +1,73 @@
+name: Check Upstream Geography Data
+
+on:
+  schedule:
+    # Mondays 02:00 UTC
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Compare pinned SHA to upstream main
+        id: check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pnpm check-upstream
+        continue-on-error: true
+
+      - name: Open or update tracking issue
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          title="Upstream thailand-geography-json has newer data"
+          body="$(cat <<'EOF'
+          Automated check found that `thailand-geography-json` on `main` is ahead of the pinned commit in `package.json`.
+
+          ## Update
+
+          ```bash
+          pnpm check-upstream
+          pnpm update-data
+          ```
+
+          Or bump the git SHA manually, then run `pnpm test && pnpm build`.
+
+          Workflow: Check Upstream Geography Data
+          EOF
+          )"
+
+          existing="$(gh issue list --state open --search "in:title Upstream thailand-geography-json" --json number,title --jq '.[0].number')"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+            echo "Commented on issue #$existing"
+          else
+            gh issue create --title "$title" --body "$body"
+          fi
+
+      - name: Fail job when upstream is ahead
+        if: steps.check.outcome == 'failure'
+        run: exit 1

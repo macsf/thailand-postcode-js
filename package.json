@@ -1,0 +1,72 @@
+{
+  "name": "thailand-postcode",
+  "version": "1.0.0",
+  "description": "Thai province, district, subdistrict, and postcode lookup with React cascade helpers",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react/index.d.ts",
+      "import": "./dist/react/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "demo": "pnpm --dir demo dev",
+    "check-upstream": "node scripts/check-upstream.mjs",
+    "update-data": "pnpm update thailand-geography-json && pnpm test && pnpm build",
+    "prepublishOnly": "pnpm run build && pnpm test"
+  },
+  "dependencies": {
+    "thailand-geography-json": "github:thailand-geography-data/thailand-geography-json#b8b3fb91c7df1129ff5b43cb46f7fcffadd2156b"
+  },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.3",
+    "vitest": "^3.1.2"
+  },
+  "keywords": [
+    "thailand",
+    "postcode",
+    "zipcode",
+    "province",
+    "district",
+    "subdistrict",
+    "address"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
