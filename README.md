@@ -81,12 +81,15 @@ Hooks: `useProvinces()`, `useDistricts(provinceCode)`, `useSubdistricts(district
 
 ## Demo
 
+Live: [macsf.github.io/thailand-postcode-js](https://macsf.github.io/thailand-postcode-js/)
+
 ```bash
 pnpm install
-pnpm demo
+pnpm demo          # http://localhost:5173/thailand-postcode-js/
+pnpm build:demo    # writes dist-demo/ for GitHub Pages
 ```
 
-The Vite demo has four modes: cascade selects, full-address search via `useAddressSearch`, per-field autosuggest, and postal-code lookup via `getByZipcode`.
+The demo mirrors the date-picker layout: sidebar sections for cascade selects, address search, per-field autosuggest, and postal-code lookup. Pushing to `main` deploys Pages via `.github/workflows/pages.yml`.
 
 ## Keeping geography data current
 
@@ -107,6 +110,7 @@ pnpm update-data      # bump dependency, test, build
 | `pnpm check-upstream` | Compare pinned geography SHA to upstream |
 | `pnpm update-data` | Bump geography dependency, then test and build |
 | `pnpm demo` | Start the Vite React demo |
+| `pnpm build:demo` | Build the demo to `dist-demo/` |
 
 ## License
 

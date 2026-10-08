@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-10-08T04:33:47.619Z",
+        "reason": "user asked to mimic the-date-picker demo which uses Inter"
+      }
+    ]
+  }
+}

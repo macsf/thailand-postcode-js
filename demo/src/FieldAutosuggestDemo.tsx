@@ -5,6 +5,7 @@ import {
   useProvinces,
   useSubdistricts,
 } from "thailand-postcode/react";
+import { CodeBlock, ValueDisplay } from "./CodeBlock";
 import {
   FieldSuggest,
   type FieldSuggestOption,
@@ -85,55 +86,72 @@ export function FieldAutosuggestDemo() {
       : "";
 
   return (
-    <>
-      <div className="cascade field-cascade">
-        <FieldSuggest
-          label="จังหวัด"
-          placeholder="พิมพ์ชื่อจังหวัด"
-          value={province?.label ?? ""}
-          options={provinceOptions}
-          onPick={(option) => {
-            setProvince(option);
-            setDistrict(null);
-            setSubdistrict(null);
-          }}
-          onClear={() => {
-            setProvince(null);
-            setDistrict(null);
-            setSubdistrict(null);
-          }}
-        />
-        <FieldSuggest
-          label="เขต/อำเภอ"
-          placeholder="พิมพ์ชื่อเขตหรืออำเภอ"
-          value={district?.label ?? ""}
-          options={districtOptions}
-          disabled={!province}
-          onPick={(option) => {
-            setDistrict(option);
-            setSubdistrict(null);
-          }}
-          onClear={() => {
-            setDistrict(null);
-            setSubdistrict(null);
-          }}
-        />
-        <FieldSuggest
-          label="แขวง/ตำบล"
-          placeholder="พิมพ์ชื่อแขวงหรือตำบล"
-          value={subdistrict?.label ?? ""}
-          options={subdistrictOptions}
-          disabled={!district}
-          onPick={setSubdistrict}
-          onClear={() => setSubdistrict(null)}
-        />
-      </div>
+    <div>
+      <h1 className="demo-section-title">Per-field autosuggest</h1>
+      <p className="demo-section-desc">
+        Cascade with typeahead on each field. District and subdistrict options
+        narrow after the parent selection.
+      </p>
+      <div className="demo-row">
+        <div className="demo-preview">
+          <div className="demo-card cascade field-cascade">
+            <FieldSuggest
+              label="จังหวัด"
+              placeholder="พิมพ์ชื่อจังหวัด"
+              value={province?.label ?? ""}
+              options={provinceOptions}
+              onPick={(option) => {
+                setProvince(option);
+                setDistrict(null);
+                setSubdistrict(null);
+              }}
+              onClear={() => {
+                setProvince(null);
+                setDistrict(null);
+                setSubdistrict(null);
+              }}
+            />
+            <FieldSuggest
+              label="เขต/อำเภอ"
+              placeholder="พิมพ์ชื่อเขตหรืออำเภอ"
+              value={district?.label ?? ""}
+              options={districtOptions}
+              disabled={!province}
+              onPick={(option) => {
+                setDistrict(option);
+                setSubdistrict(null);
+              }}
+              onClear={() => {
+                setDistrict(null);
+                setSubdistrict(null);
+              }}
+            />
+            <FieldSuggest
+              label="แขวง/ตำบล"
+              placeholder="พิมพ์ชื่อแขวงหรือตำบล"
+              value={subdistrict?.label ?? ""}
+              options={subdistrictOptions}
+              disabled={!district}
+              onPick={setSubdistrict}
+              onClear={() => setSubdistrict(null)}
+            />
+          </div>
+        </div>
+        <div className="demo-info">
+          <ValueDisplay value={formatted} />
+          <CodeBlock
+            code={`import {
+  useProvinces,
+  useDistricts,
+  useSubdistricts,
+} from "thailand-postcode/react";
 
-      {formatted ? (
-        <output className="output" aria-live="polite">
-          {formatted}
-        </output>
-      ) : null}
-    </>
+const provinces = useProvinces();
+const districts = useDistricts(provinceCode);
+const subdistricts = useSubdistricts(districtCode);`}
+          />
+        </div>
+      </div>
+    </div>
   );
 }

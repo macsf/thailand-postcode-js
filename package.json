@@ -26,6 +26,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "demo": "pnpm --dir demo dev",
+    "build:demo": "pnpm --dir demo build",
     "check-upstream": "node scripts/check-upstream.mjs",
     "update-data": "pnpm update thailand-geography-json && pnpm test && pnpm build",
     "prepublishOnly": "pnpm run build && pnpm test"

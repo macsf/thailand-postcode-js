@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, type ComponentType } from "react";
+import pkg from "../../package.json";
 import { AutosuggestDemo } from "./AutosuggestDemo";
 import { CascadeDemo } from "./CascadeDemo";
 import { FieldAutosuggestDemo } from "./FieldAutosuggestDemo";
@@ -6,67 +7,47 @@ import { ZipcodeDemo } from "./ZipcodeDemo";
 
 type DemoMode = "cascade" | "autosuggest" | "fields" | "zipcode";
 
-const modes: { id: DemoMode; label: string; description: string }[] = [
-  {
-    id: "cascade",
-    label: "Cascade",
-    description: "Province, district, subdistrict, and zipcode cascade.",
-  },
-  {
-    id: "autosuggest",
-    label: "Search",
-    description: "Type a place name or zipcode to search addresses.",
-  },
-  {
-    id: "fields",
-    label: "Fields",
-    description: "Autosuggest each field: province, district, then subdistrict.",
-  },
-  {
-    id: "zipcode",
-    label: "Zipcode",
-    description: "Look up addresses by a 5-digit postal code.",
-  },
+const SECTIONS: { id: DemoMode; label: string; Component: ComponentType }[] = [
+  { id: "cascade", label: "1. Cascade", Component: CascadeDemo },
+  { id: "autosuggest", label: "2. Address search", Component: AutosuggestDemo },
+  { id: "fields", label: "3. Per-field suggest", Component: FieldAutosuggestDemo },
+  { id: "zipcode", label: "4. Postal code", Component: ZipcodeDemo },
 ];
 
 export function App() {
-  const [mode, setMode] = useState<DemoMode>("cascade");
-  const active = modes.find((item) => item.id === mode)!;
+  const [active, setActive] = useState<DemoMode>("cascade");
+  const section = SECTIONS.find((item) => item.id === active)!;
+  const SectionComponent = section.Component;
 
   return (
-    <main className="page">
-      <header className="header">
-        <h1>Thailand Postcode</h1>
-        <p>{active.description}</p>
-      </header>
-
-      <div className="mode-switch" role="tablist" aria-label="Demo Mode">
-        {modes.map((item) => {
-          const isSelected = item.id === mode;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={isSelected}
-              className={isSelected ? "mode-btn is-selected" : "mode-btn"}
-              onClick={() => setMode(item.id)}
-            >
-              {item.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {mode === "cascade" ? (
-        <CascadeDemo />
-      ) : mode === "autosuggest" ? (
-        <AutosuggestDemo />
-      ) : mode === "fields" ? (
-        <FieldAutosuggestDemo />
-      ) : (
-        <ZipcodeDemo />
-      )}
-    </main>
+    <div className="demo-layout">
+      <aside className="demo-sidebar">
+        <div className="demo-sidebar-title">
+          Thailand Postcode{" "}
+          <span className="demo-version">v{pkg.version}</span>
+        </div>
+        <nav>
+          <ul className="demo-nav">
+            {SECTIONS.map((item) => (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  className={[
+                    "demo-nav-item",
+                    active === item.id ? "active" : "",
+                  ].join(" ")}
+                  onClick={() => setActive(item.id)}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </aside>
+      <main className="demo-content">
+        <SectionComponent />
+      </main>
+    </div>
   );
 }
