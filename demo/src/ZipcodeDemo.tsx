@@ -1,6 +1,6 @@
 import { useId, useMemo, useState } from "react";
 import { formatAddress, getByZipcode } from "thailand-postcode";
-import { CodeBlock, ValueDisplay } from "./CodeBlock";
+import { CodeBlock, JsonDisplay, ValueDisplay } from "./CodeBlock";
 
 export function ZipcodeDemo() {
   const inputId = useId();
@@ -20,12 +20,24 @@ export function ZipcodeDemo() {
       ? "no matches"
       : "";
 
+  const samplePayload = hasResults
+    ? {
+        count: results.length,
+        first: results[0],
+        ...(results.length > 1
+          ? { note: `+${results.length - 1} more rows omitted` }
+          : {}),
+      }
+    : isComplete
+      ? []
+      : null;
+
   return (
     <div>
       <h1 className="demo-section-title">Postal code lookup</h1>
       <p className="demo-section-desc">
-        Enter a 5-digit zipcode to list matching subdistricts via{" "}
-        <code>getByZipcode</code>.
+        <code>getByZipcode</code> returns <code>AddressResult[]</code> (one row
+        per matching subdistrict). Sample below shows the first row.
       </p>
       <div className="demo-row">
         <div className="demo-preview">
@@ -85,10 +97,15 @@ export function ZipcodeDemo() {
         </div>
         <div className="demo-info">
           <ValueDisplay label="Matches" value={summary} />
+          <JsonDisplay label="getByZipcode sample" value={samplePayload} />
           <CodeBlock
             code={`import { getByZipcode } from "thailand-postcode";
 
-const rows = getByZipcode("10200");`}
+const rows = getByZipcode("10200");
+// rows[0].province
+// rows[0].district
+// rows[0].subdistrict
+// rows[0].postalCode`}
           />
         </div>
       </div>

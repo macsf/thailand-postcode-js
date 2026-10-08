@@ -159,6 +159,24 @@ code {
   margin-bottom: 6px;
 }
 
+.demo-json-block {
+  margin-bottom: 16px;
+}
+
+.demo-json {
+  margin: 0;
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-family: "Menlo", "Monaco", "Consolas", monospace;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #374151;
+  overflow: auto;
+  max-height: 360px;
+  white-space: pre;
+}
+
 /* Code block */
 .demo-code {
   background: #f8fafc;

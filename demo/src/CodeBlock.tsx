@@ -97,3 +97,23 @@ export function ValueDisplay({
     </div>
   );
 }
+
+export function JsonDisplay({
+  label = "onChange payload",
+  value,
+}: {
+  label?: string;
+  value: unknown;
+}) {
+  const text =
+    value == null ? "null" : JSON.stringify(value, null, 2);
+
+  return (
+    <div className="demo-json-block">
+      <div className="demo-value-label">{label}</div>
+      <pre className="demo-json" aria-live="polite">
+        {text}
+      </pre>
+    </div>
+  );
+}

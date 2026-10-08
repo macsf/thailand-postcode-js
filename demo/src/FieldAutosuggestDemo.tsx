@@ -5,7 +5,7 @@ import {
   useProvinces,
   useSubdistricts,
 } from "thailand-postcode/react";
-import { CodeBlock, ValueDisplay } from "./CodeBlock";
+import { CodeBlock, JsonDisplay, ValueDisplay } from "./CodeBlock";
 import {
   FieldSuggest,
   type FieldSuggestOption,
@@ -62,35 +62,43 @@ export function FieldAutosuggestDemo() {
     [subdistrict, subdistricts]
   );
 
-  const formatted =
-    province && district && selectedSubdistrict
-      ? formatAddress({
-          province: {
-            provinceCode: Number(province.id),
-            provinceNameTh: province.label,
-            provinceNameEn: province.meta ?? "",
-          },
-          district: {
-            districtCode: Number(district.id),
-            districtNameTh: district.label,
-            districtNameEn: district.meta ?? "",
-          },
-          subdistrict: {
-            subdistrictCode: selectedSubdistrict.subdistrictCode,
-            subdistrictNameTh: selectedSubdistrict.subdistrictNameTh,
-            subdistrictNameEn: selectedSubdistrict.subdistrictNameEn,
-            postalCode: selectedSubdistrict.postalCode,
-          },
-          postalCode: selectedSubdistrict.postalCode,
-        })
-      : "";
+  const selection =
+    province || district || selectedSubdistrict
+      ? {
+          province: province
+            ? {
+                provinceCode: Number(province.id),
+                provinceNameTh: province.label,
+                provinceNameEn: province.meta ?? "",
+              }
+            : null,
+          district: district
+            ? {
+                districtCode: Number(district.id),
+                districtNameTh: district.label,
+                districtNameEn: district.meta ?? "",
+              }
+            : null,
+          subdistrict: selectedSubdistrict
+            ? {
+                subdistrictCode: selectedSubdistrict.subdistrictCode,
+                subdistrictNameTh: selectedSubdistrict.subdistrictNameTh,
+                subdistrictNameEn: selectedSubdistrict.subdistrictNameEn,
+                postalCode: selectedSubdistrict.postalCode,
+              }
+            : null,
+          postalCode: selectedSubdistrict?.postalCode ?? null,
+        }
+      : null;
+
+  const formatted = selection ? formatAddress(selection) : "";
 
   return (
     <div>
       <h1 className="demo-section-title">Per-field autosuggest</h1>
       <p className="demo-section-desc">
-        Cascade with typeahead on each field. District and subdistrict options
-        narrow after the parent selection.
+        Build the same <code>AddressSelection</code> shape from the hooks, then
+        pass it to <code>formatAddress</code>.
       </p>
       <div className="demo-row">
         <div className="demo-preview">
@@ -138,9 +146,11 @@ export function FieldAutosuggestDemo() {
           </div>
         </div>
         <div className="demo-info">
-          <ValueDisplay value={formatted} />
+          <ValueDisplay label="formatted" value={formatted} />
+          <JsonDisplay label="AddressSelection" value={selection} />
           <CodeBlock
-            code={`import {
+            code={`import { formatAddress } from "thailand-postcode";
+import {
   useProvinces,
   useDistricts,
   useSubdistricts,
@@ -148,7 +158,9 @@ export function FieldAutosuggestDemo() {
 
 const provinces = useProvinces();
 const districts = useDistricts(provinceCode);
-const subdistricts = useSubdistricts(districtCode);`}
+const subdistricts = useSubdistricts(districtCode);
+
+formatAddress(selection);`}
           />
         </div>
       </div>

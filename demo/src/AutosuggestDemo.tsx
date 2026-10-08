@@ -7,7 +7,7 @@ import {
 } from "react";
 import { formatAddress, type AddressResult } from "thailand-postcode";
 import { useAddressSearch } from "thailand-postcode/react";
-import { CodeBlock, ValueDisplay } from "./CodeBlock";
+import { CodeBlock, JsonDisplay, ValueDisplay } from "./CodeBlock";
 
 function resultLabel(hit: AddressResult): string {
   return formatAddress({
@@ -89,8 +89,9 @@ export function AutosuggestDemo() {
     <div>
       <h1 className="demo-section-title">Address search</h1>
       <p className="demo-section-desc">
-        Type a Thai or English place name, or a postal code, via{" "}
-        <code>useAddressSearch</code>.
+        <code>useAddressSearch</code> / <code>search</code> return{" "}
+        <code>AddressResult[]</code>. Selecting a hit gives you province,
+        district, subdistrict, and postal code objects.
       </p>
       <div className="demo-row">
         <div className="demo-preview">
@@ -170,12 +171,18 @@ export function AutosuggestDemo() {
         </div>
         <div className="demo-info">
           <ValueDisplay
+            label="formatted"
             value={selected ? resultLabel(selected) : ""}
           />
+          <JsonDisplay label="selected AddressResult" value={selected} />
           <CodeBlock
             code={`import { useAddressSearch } from "thailand-postcode/react";
 
-const results = useAddressSearch(query, 12);`}
+const results = useAddressSearch(query, 12);
+// results[0].province.provinceNameTh
+// results[0].district.districtCode
+// results[0].subdistrict.postalCode
+// results[0].postalCode`}
           />
         </div>
       </div>
