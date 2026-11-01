@@ -54,6 +54,20 @@ describe("getByZipcode", () => {
     expect(rows[0]?.postalCode).toBe(10200);
     expect(rows[0]?.subdistrict.subdistrictNameTh).toBeTruthy();
   });
+
+  it("resolves a secondary postal code to its subdistrict", () => {
+    const rows = getByZipcode(81210);
+    expect(
+      rows.some((row) => row.subdistrict.subdistrictCode === 810116)
+    ).toBe(true);
+  });
+
+  it("keeps the looked-up code on secondary postal-code results", () => {
+    const row = getByZipcode(81210).find(
+      (hit) => hit.subdistrict.subdistrictCode === 810116
+    );
+    expect(row?.postalCode).toBe(81210);
+  });
 });
 
 describe("search", () => {
@@ -63,6 +77,13 @@ describe("search", () => {
     expect(
       rows.some((r) => r.province.provinceNameEn === "Chiang Mai")
     ).toBe(true);
+  });
+
+  it("finds a subdistrict by a secondary postal code", () => {
+    const rows = search("81210");
+    expect(rows.some((row) => row.subdistrict.subdistrictCode === 810116)).toBe(
+      true
+    );
   });
 
   it("finds addresses by postal code prefix", () => {

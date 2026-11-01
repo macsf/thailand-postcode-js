@@ -29,6 +29,12 @@ declare module "thailand-geography-json/src/subdistricts.json" {
     subdistrictNameEn: string;
     subdistrictNameTh: string;
     postalCode: number;
+    postalCodes: Array<{
+      postalCode: number;
+      isPrimary: boolean;
+      detailTh: string;
+      detailEn: string;
+    }>;
   }>;
   export default subdistricts;
 }

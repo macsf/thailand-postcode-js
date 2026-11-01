@@ -65,6 +65,12 @@ function toSubdistrict(raw: (typeof subdistrictsJson)[number]): Subdistrict {
     subdistrictNameTh: raw.subdistrictNameTh,
     subdistrictNameEn: raw.subdistrictNameEn,
     postalCode: raw.postalCode,
+    postalCodes: raw.postalCodes.map((entry) => ({
+      postalCode: entry.postalCode,
+      isPrimary: entry.isPrimary,
+      detailTh: entry.detailTh,
+      detailEn: entry.detailEn,
+    })),
   };
 }
 
@@ -129,23 +135,34 @@ export const subdistrictByCode = new Map(
 );
 
 export const addressesByPostalCode = new Map<number, AddressResult[]>();
-for (const subdistrict of subdistricts) {
+
+function pushAddress(subdistrict: Subdistrict, postalCode: number) {
   const province = provinceByCode.get(subdistrict.provinceCode);
   const district = districtByCode.get(subdistrict.districtCode);
-  if (!province || !district) continue;
+  if (!province || !district) return;
 
-  const result: AddressResult = {
-    province,
-    district,
-    subdistrict,
-    postalCode: subdistrict.postalCode,
-  };
-
-  const list = addressesByPostalCode.get(subdistrict.postalCode);
+  const list = addressesByPostalCode.get(postalCode);
   if (list) {
-    list.push(result);
-  } else {
-    addressesByPostalCode.set(subdistrict.postalCode, [result]);
+    if (
+      list.some(
+        (row) => row.subdistrict.subdistrictCode === subdistrict.subdistrictCode
+      )
+    ) {
+      return;
+    }
+    list.push({ province, district, subdistrict, postalCode });
+    return;
+  }
+
+  addressesByPostalCode.set(postalCode, [
+    { province, district, subdistrict, postalCode },
+  ]);
+}
+
+for (const subdistrict of subdistricts) {
+  pushAddress(subdistrict, subdistrict.postalCode);
+  for (const entry of subdistrict.postalCodes) {
+    pushAddress(subdistrict, entry.postalCode);
   }
 }
 

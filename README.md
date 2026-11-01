@@ -52,7 +52,7 @@ Bangkok (`provinceCode` `10`) uses `เขต` / `แขวง`. Other provinces
 | --- | --- |
 | `Province` | `provinceCode`, `provinceNameTh`, `provinceNameEn` |
 | `District` | `districtCode`, `provinceCode`, `districtNameTh`, `districtNameEn`, `postalCode` |
-| `Subdistrict` | `subdistrictCode`, `districtCode`, `provinceCode`, `subdistrictNameTh`, `subdistrictNameEn`, `postalCode` |
+| `Subdistrict` | `subdistrictCode`, `districtCode`, `provinceCode`, `subdistrictNameTh`, `subdistrictNameEn`, `postalCode`, `postalCodes` |
 
 Field names match the upstream geography JSON.
 

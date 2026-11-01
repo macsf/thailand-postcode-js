@@ -14,6 +14,13 @@ export interface District {
   postalCode: number;
 }
 
+export interface PostalCodeEntry {
+  postalCode: number;
+  isPrimary: boolean;
+  detailTh: string;
+  detailEn: string;
+}
+
 export interface Subdistrict {
   id: number;
   provinceCode: number;
@@ -22,6 +29,7 @@ export interface Subdistrict {
   subdistrictNameTh: string;
   subdistrictNameEn: string;
   postalCode: number;
+  postalCodes: PostalCodeEntry[];
 }
 
 export interface LocalizedName {

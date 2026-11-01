@@ -21,6 +21,7 @@ export type {
   District,
   GetProvincesOptions,
   LocalizedName,
+  PostalCodeEntry,
   Province,
   Subdistrict,
 } from "./types.js";

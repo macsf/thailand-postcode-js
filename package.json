@@ -32,7 +32,7 @@
     "prepublishOnly": "pnpm run build && pnpm test"
   },
   "dependencies": {
-    "thailand-geography-json": "github:thailand-geography-data/thailand-geography-json#b8b3fb91c7df1129ff5b43cb46f7fcffadd2156b"
+    "thailand-geography-json": "github:thailand-geography-data/thailand-geography-json#021d18e9a481bc141ea87de4ddeebe843cff2f12"
   },
   "peerDependencies": {
     "react": ">=18",
