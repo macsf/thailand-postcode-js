@@ -36,10 +36,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: pnpm check-upstream
-        continue-on-error: true
 
       - name: Open or update tracking issue
-        if: steps.check.outcome == 'failure'
+        if: steps.check.outputs.outdated == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -67,7 +66,3 @@ jobs:
           else
             gh issue create --title "$title" --body "$body"
           fi
-
-      - name: Fail job when upstream is ahead
-        if: steps.check.outcome == 'failure'
-        run: exit 1

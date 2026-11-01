@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { appendFile, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -109,10 +109,15 @@ async function main() {
 
   console.log(summary);
 
+  if (process.env.GITHUB_OUTPUT) {
+    await appendFile(
+      process.env.GITHUB_OUTPUT,
+      `outdated=${upToDate ? "false" : "true"}\n`
+    );
+  }
+
   if (process.env.GITHUB_STEP_SUMMARY) {
-    await (
-      await import("node:fs/promises")
-    ).appendFile(
+    await appendFile(
       process.env.GITHUB_STEP_SUMMARY,
       `## Upstream geography data\n\n\`\`\`\n${summary}\n\`\`\`\n\n${
         upToDate
@@ -133,6 +138,15 @@ async function main() {
   console.error(
     `pnpm add ${DEPENDENCY}@github:${REPO}#${upstream.sha}`
   );
+
+  if (process.env.GITHUB_ACTIONS) {
+    console.log(
+      `::warning title=Upstream geography data::Pinned SHA is behind ${REPO}@${BRANCH} (${short(upstream.sha)}). A tracking issue will be opened or updated.`
+    );
+    process.exitCode = 0;
+    return;
+  }
+
   process.exitCode = 1;
 }
 
