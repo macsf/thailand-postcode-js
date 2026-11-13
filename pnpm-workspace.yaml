@@ -3,3 +3,7 @@ packages:
   - demo
 allowBuilds:
   esbuild: true
+overrides:
+  'tinypool@<2.1.2': ^2.1.2
+  'esbuild@>=0.27.3 <0.28.1': ^0.28.1
+  '@vitest/mocker@<4.1.12': ^4.1.12
